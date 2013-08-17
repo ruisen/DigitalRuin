@@ -1,5 +1,6 @@
 # This is a makefile for the DigitalRuin project.
 # All rights reservied by Ruisen Luo
+#
 
 # Common variable settings
 SHELL = /bin/sh

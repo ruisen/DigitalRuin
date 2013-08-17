@@ -3,5 +3,5 @@
 
 void main()
 {
-  execl("./server", "");
+  execl("./server", "");	/* Just start the server here! */
 }
