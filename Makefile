@@ -46,7 +46,7 @@ $$($(1)_src:%.$(2)=%.o) : $$($(1)_src)
 ALL_OBJS += $$($(1)_src:%.$(2)=%.o)
 endef
 
-# Recipe for building C or C++ static library
+# Recipe for building C or C++ dynamic library
 # $1 target lib name
 define DLIB
 $($(1):%=lib%.so) : $$($(1)_src)
