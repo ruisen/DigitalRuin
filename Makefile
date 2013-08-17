@@ -49,7 +49,7 @@ endef
 
 # Recipe for building C or C++ dynamic library
 # $1 target lib name
-define DLIB
+define DLIB	
 $($(1):%=lib%.so) : $$($(1)_src)
 	$(CC) -shared $(CFLAGS) $$^ -o $(LIB_DIR)$$@ -I$(INCLUDE_DIR)
 endef
