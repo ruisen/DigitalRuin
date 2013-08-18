@@ -82,8 +82,6 @@ programs =  controller client #Program list
 slibs =	server			    #Static lib list
 dlibs =				    #Dynamic lib list
 
-all_target = $(programs) $(slibs:%=lib%.a) $(dlibs:%=lib%.so)
-
 server_src = ./src/server/hi.cpp  #./src/server/server.c 
 server_lib =
 server_ctype = cpp
@@ -94,6 +92,8 @@ client_src = ./src/client/client.c
 client_lib = 
 client_ctype = c
 ##############################<<<
+
+all_target = $(programs) $(slibs:%=lib%.a) $(dlibs:%=lib%.so)
 
 # Rules
 .PHONY: clean all
