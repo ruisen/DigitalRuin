@@ -42,6 +42,10 @@ endef
 # $1 target program name
 # $2 c or cpp
 define PROGRAM
+#This __[pname]_target target is used for adding lib requiement to that program
+__$(1)_target : $$($(1)_lib:%=lib%.a) $(1) 
+	@echo Successful build PROGRAM $(1)
+
 $(1) : $$($(1)_src:%.$(2)=%.o)
 ifeq ($(2),cpp)
 	$(CC) $(CFLAGS) $$^ -o $(BIN_DIR)$$@ -L$(LIB_DIR) $$($(1)_lib:%=-l%) $(CPPFLAGS)
@@ -61,6 +65,7 @@ endef
 define SLIB
 lib$(1).a : $$($(1)_src:%.$(2)=%.o)
 	$(AR) $(ARFLAGS) $(LIB_DIR)$$@ $$^
+	@echo Successful build SLIB $(1)
 
 $(foreach src,$($(1)_src),$(call OBJ,$(src),$(2)))
 
@@ -73,27 +78,15 @@ endef
 define DLIB	
 lib$(1).so : $$($(1)_src)
 	$(CC) -shared $(CFLAGS) $$^ -o $(LIB_DIR)$$@ -I$(INCLUDE_DIR)
+	@echo Successful build DLIB $(1)
 
 endef
 
 ##############################>>>
-# Project source file settings
-programs =  controller client #Program list
-slibs =	server			    #Static lib list
-dlibs =				    #Dynamic lib list
-
-server_src = ./src/server/hi.cpp  #./src/server/server.c 
-server_lib =
-server_ctype = cpp
-controller_src = ./src/server/controller.c
-controller_lib = 
-controller_ctype = c
-client_src = ./src/client/client.c
-client_lib = 
-client_ctype = c
+include project.mk
 ##############################<<<
 
-all_target = $(programs) $(slibs:%=lib%.a) $(dlibs:%=lib%.so)
+all_target = $(programs:%=__%_target) $(slibs:%=lib%.a) $(dlibs:%=lib%.so)
 
 # Rules
 .PHONY: clean all
@@ -105,8 +98,9 @@ $(foreach dlib,$(dlibs),$(eval $(call DLIB,$(dlib),$($(dlib)_ctype))))
 $(foreach program,$(programs),$(eval $(call PROGRAM,$(program),$($(program)_ctype))))
 
 clean:
-	-rm $(programs:%=$(BIN_DIR)%)
-	-rm $(slibs:%=$(LIB_DIR)lib%.a)
-	-rm $(dlibs:%=$(LIB_DIR)lib%.so)
-	-rm $(ALL_OBJS)
+	-rm -f $(programs:%=$(BIN_DIR)%) 2>/dev/null
+	-rm -f $(slibs:%=$(LIB_DIR)lib%.a) 2>/dev/null
+	-rm -f $(dlibs:%=$(LIB_DIR)lib%.so) 2>/dev/null
+	-rm -f $(ALL_OBJS) 2>/dev/null
+	@echo Clean up completed!
 
