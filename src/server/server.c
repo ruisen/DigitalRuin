@@ -10,7 +10,7 @@
 /* how many pending connections queue will hold */
 #define BACKLOG 10
 
-void main()
+int main()
 {
     /* listen on sock_fd, new connection on new_fd */
     int sockfd, new_fd;
