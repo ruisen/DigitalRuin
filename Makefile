@@ -43,7 +43,7 @@ endef
 # $2 c or cpp
 define PROGRAM
 #This __[pname]_target target is used for adding lib requiement to that program
-__$(1)_target : $$($(1)_lib:%=lib%.a) $(1) 
+__$(1)_program : $$($(1)_lib:%=lib%.a) $(1) 
 	@echo Successful build PROGRAM $(1)
 
 $(1) : $$($(1)_src:%.$(2)=%.o)
@@ -86,7 +86,7 @@ endef
 include project.mk
 ##############################<<<
 
-all_target = $(programs:%=__%_target) $(slibs:%=lib%.a) $(dlibs:%=lib%.so)
+all_target = $(programs:%=__%_program) $(slibs:%=lib%.a) $(dlibs:%=lib%.so)
 
 # Rules
 .PHONY: clean all
