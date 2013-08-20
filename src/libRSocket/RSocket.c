@@ -69,3 +69,44 @@ void RS_close(RS_SockFD sfd)
 	_error("close error");
     }
 }
+
+ssize_t RS_read(RS_SockFD sfd, void *pbuff, size_t n)
+{
+    size_t nleft;
+    ssize_t nread;
+    char *ptr;
+
+    ptr = pbuff;
+    nleft = n;
+
+    while(nleft > 0)
+    {
+	if ((nread = read(sfd, pbuff, nleft)) < 0)
+	{
+	    if (errno == EINTR)
+	    {
+		nread = 0;	/* If got interrupted, call read again */
+	    }
+	    else
+	    {
+		_error("read error"); /* Got something wrong */
+	    }
+	}
+	else if (nread == 0)
+	{
+	    break;		/* EOF */
+	}
+
+	nleft -= nread;
+	ptr += nread;
+    }
+
+    nread = n - nleft;	/* Use nread again to represent total read count */
+
+    if (nread < 0)
+    {
+	_error("read error");	/* This must be an error! */
+    }
+
+    return nread;
+}
