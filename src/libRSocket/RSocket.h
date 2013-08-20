@@ -61,13 +61,13 @@ RS_SockFD RS_accept(RS_SockFD sfd, RS_SockAddr *psa, RS_SockLen *pslen);
    |     sfd : the socket file descriptor we decrease its reference count*/
 void RS_close(RS_SockFD sfd);
 
-/* |-RS_read : read 
+/* |-RS_read : read at most n bytes from specified socket into a buffer
    | Params:
    |     sfd : socket file descriptor
-   |     psa : socket address of the currently connected peer process
-   |     slen : socket address struct length
+   |     pbuff : read buffer
+   |     n : numbers of bytes want to read
    | Return:
-   |     the currently connected peer process' socket file descriptor*/
+   |     the exactly number of bytes read*/
 ssize_t RS_read(RS_SockFD sfd, void *pbuff, size_t n);
 
 #endif /* _RSOCKET_H_ */
