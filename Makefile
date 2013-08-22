@@ -48,9 +48,9 @@ __$(1)_program : $$($(1)_lib:%=lib%.a) $(1)
 
 $(1) : $$($(1)_src:%.$(2)=%.o)
 ifeq ($(2),cpp)
-	$(CC) $(CFLAGS) $$^ -o $(BIN_DIR)$$@ -L$(LIB_DIR) $$($(1)_lib:%=-l%) $(CPPFLAGS)
+	$(CC) $(CFLAGS) $$^ -o $(BIN_DIR)$$@ -L$(LIB_DIR) $$($(1)_lib:%=-l%) $$($(1)_exlib:%=-l%)  $(CPPFLAGS)
 else
-	$(CC) $(CFLAGS) $$^ -o $(BIN_DIR)$$@ -L$(LIB_DIR) $$($(1)_lib:%=-l%)
+	$(CC) $(CFLAGS) $$^ -o $(BIN_DIR)$$@ -L$(LIB_DIR) $$($(1)_lib:%=-l%) $$($(1)_exlib:%=-l%)
 endif
 
 $(foreach src,$($(1)_src),$(call OBJ,$(src),$(2)))
@@ -65,6 +65,7 @@ endef
 define SLIB
 lib$(1).a : $$($(1)_src:%.$(2)=%.o)
 	$(AR) $(ARFLAGS) $(LIB_DIR)$$@ $$^
+	cp $($(1)_header) $(INCLUDE_DIR)
 	@echo Successful build SLIB $(1)
 
 $(foreach src,$($(1)_src),$(call OBJ,$(src),$(2)))

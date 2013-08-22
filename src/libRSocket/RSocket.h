@@ -3,6 +3,8 @@
 
 /* POSIX headers */
 #include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 #include <errno.h>
 /* std C headers */
 #include <stdlib.h>
@@ -69,5 +71,12 @@ void RS_close(RS_SockFD sfd);
    | Return:
    |     the exactly number of bytes read*/
 ssize_t RS_read(RS_SockFD sfd, void *pbuff, size_t n);
+
+/* |-RS_write : read at most n bytes from specified socket into a buffer
+   | Params:
+   |     sfd : socket file descriptor
+   |     pbuff : write buffer
+   |     n : numbers of bytes want to write*/
+void RS_write(RS_SockFD sfd, const void *pbuff, size_t n);
 
 #endif /* _RSOCKET_H_ */

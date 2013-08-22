@@ -1,56 +1,64 @@
-#include <stdio.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
+#include "RSocket.h"
 
-#define DEST_IP "127.0.0.1"
-#define DEST_PORT 8888
+#define SERV_PORT 50000		/* bigger than 49152 */
+#define LISTENQ 1024
+#define RBUFF_SIZE 512
 
-int main(int argc, char *argv[ ])
+void str_cli(RS_SockFD sfd)
 {
-    int sockfd;
-
-    /* will hold the destination addr */
-    struct sockaddr_in dest_addr;
-  
-    printf("I'm a client!\n");
-
-    /* get a socket file descriptor */
-    if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
+    char wbuff[RBUFF_SIZE], rbuff[RBUFF_SIZE];
+    size_t n;
+    
+    memset((void*)wbuff, 0, sizeof(wbuff));
+    memset((void*)rbuff, 0, sizeof(rbuff));
+    
+    while(1)
     {
-	perror("Client-socket() error lol!");
+	char * pchar = wbuff;
+	int c;
+
+	for(;;) {
+	    c = fgetc(stdin);
+	    if(c == EOF)
+		return;
+	    *pchar = c;
+	    pchar ++;
+	    if(c == '\n' || c == '\r')
+	    {
+		break;
+	    }
+	}
+	*pchar = '\0';
+	/* printf ("str[%d]:%s\n",strlen(wbuff),wbuff); */
+	
+	RS_write(sfd, wbuff, strlen(wbuff) + 1);
+	RS_read(sfd, rbuff, strlen(wbuff) + 1);
+	printf ("echo:%s\n",rbuff);
+    }
+}
+
+int main(int argc, char *argv[])
+{
+    RS_SockFD sfd;
+    struct sockaddr_in serv_addr;
+
+    if (argc != 2)
+    {
+	printf ("usage client <server IP address>\n");
 	exit(1);
     }
-    else
-    {
-	printf("Client-socket() sockfd is OK...\n");
-    }
+
+    memset(&serv_addr, 0, sizeof(serv_addr));
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_port = htons(SERV_PORT);
     
-    /* host byte order */
-    dest_addr.sin_family = AF_INET;
-
-    /* short, network byte order */
-    dest_addr.sin_port = htons(DEST_PORT);
-    dest_addr.sin_addr.s_addr = inet_addr(DEST_IP);
-
-    /* zero the rest of the struct */
-    memset(&(dest_addr.sin_zero), 0, 8);
-
-    /* connect to server */
-    if(connect(sockfd, (struct sockaddr *)&dest_addr, sizeof(struct sockaddr)) == -1)
-    {
-	perror("Client-connect() error lol");
-	exit(1);
-    }
-    else
-    {
-	printf("Client-connect() is OK...\n");
-    } 
-
+    sfd = RS_socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    RS_connect(sfd, (RS_SockAddr *) &serv_addr, sizeof(serv_addr));
+    inet_pton(AF_INET, argv[1], &serv_addr.sin_addr);
     
-    
-    /*...other codes...*/
+    str_cli(sfd);
 
+    RS_close(sfd);
+    
     return 0;
 }

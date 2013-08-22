@@ -43,7 +43,7 @@ void RS_listen(RS_SockFD sfd, int backlog)
     }
 }
 
-RS_SockFD RS_Accept(RS_SockFD sfd, RS_SockAddr *psa, RS_SockLen *pslen)
+RS_SockFD RS_accept(RS_SockFD sfd, RS_SockAddr *psa, RS_SockLen *pslen)
 {
     RS_SockFD fd;
 
@@ -87,6 +87,10 @@ ssize_t RS_read(RS_SockFD sfd, void *pbuff, size_t n)
 	    {
 		nread = 0;	/* If got interrupted, call read again */
 	    }
+	    else if(errno == EAGAIN || errno == EWOULDBLOCK) 
+	    {
+		break;		/* O_NONBLOCK socket, and no data is waiting to be received */
+	    }
 	    else
 	    {
 		_error("read error"); /* Got something wrong */
@@ -109,4 +113,33 @@ ssize_t RS_read(RS_SockFD sfd, void *pbuff, size_t n)
     }
 
     return nread;
+}
+
+void RS_write(RS_SockFD sfd, const void *pbuff, size_t n)
+{
+    size_t nleft;
+    ssize_t nwritten;
+    const char *ptr;
+
+    ptr = pbuff;
+    nleft = n;
+
+    while(nleft > 0)
+    {
+	if ((nwritten = write(sfd, pbuff, nleft)) <= 0)
+	{
+	    if (nwritten < 0 && errno == EINTR)
+	    {
+		nwritten = 0;
+	    }
+	    else
+	    {
+		_error("write error");
+	    }
+	}
+
+	nleft -= nwritten;
+	ptr += nwritten;
+    }
+    
 }
