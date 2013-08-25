@@ -14,7 +14,7 @@
 
 # Emacs Temp files
 *~
-#*#
+*#
 
 # Auto generated temp files
 *.d
