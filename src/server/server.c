@@ -29,7 +29,7 @@ void str_echo(RS_SockFD sfd, struct sockaddr_in * pcliaddr)
 
     inet_ntop(AF_INET, &psin->sin_addr, str_addr, sizeof(str_addr));
     inet_ntop(AF_INET, &pcliaddr->sin_addr, str_cliaddr, sizeof(str_cliaddr));
-
+    
     while(1)
     {
 	/* n = RS_read(sfd, buf,sizeof(buf)); */

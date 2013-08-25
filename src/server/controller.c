@@ -8,7 +8,8 @@
 #include <stdio.h>
 #include <unistd.h>
 
-void main()
+int main()
 {
-  execl("./server", "");	/* Just start the server here! */
+  /* execl("./server", "");	/\* Just start the server here! *\/ */
+  return 0;
 }
