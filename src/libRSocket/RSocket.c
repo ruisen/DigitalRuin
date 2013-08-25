@@ -1,3 +1,10 @@
+/****************************************************************
+ * File Name: RSocket.c
+ * Create Time: Sun Aug 25 12:31:46 2013
+ * Author: Ruisen Luo
+ * Description: 
+ ****************************************************************/
+
 #include "RSocket.h"
 
 /* a very simple error function */
@@ -15,7 +22,7 @@ RS_SockFD RS_socket(int family, int type, int protocol)
     {
 	_error("socket error");
     }
-
+    
     return sfd;
 }
 

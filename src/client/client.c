@@ -1,3 +1,10 @@
+/****************************************************************
+ * File Name: client.c
+ * Create Time: Sun Aug 25 12:33:42 2013
+ * Author: Ruisen Luo
+ * Description: 
+ ****************************************************************/
+
 #include "RSocket.h"
 
 #define SERV_PORT 50000		/* bigger than 49152 */

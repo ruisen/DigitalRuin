@@ -1,3 +1,10 @@
+/****************************************************************
+ * File Name: RSocket.h
+ * Create Time: Sun Aug 25 12:31:55 2013
+ * Author: Ruisen Luo
+ * Description: 
+ ****************************************************************/
+
 #ifndef _RSOCKET_H_
 #define _RSOCKET_H_
 
@@ -9,6 +16,7 @@
 /* std C headers */
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 /* +MACROS */
 /* |-MACRO DEFINE */

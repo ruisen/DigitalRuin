@@ -1,3 +1,10 @@
+/****************************************************************
+ * File Name: server.c
+ * Create Time: Sun Aug 25 12:30:25 2013
+ * Author: Ruisen Luo
+ * Description: 
+ ****************************************************************/
+
 #include "RSocket.h"
 
 #define SERV_PORT 50000		/* bigger than 49152 */
